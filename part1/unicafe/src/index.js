@@ -12,35 +12,44 @@ const Feedback = (props) => {
 }
 
 const Total = (props) => {
- const text = 'yhteensä'
+ const total = props.good + props.neutral + props.bad
 
  return (
    <p>
-     {text} {props.good + props.neutral + props.bad}
+     {total}
    </p>
  )
 }
 
 
 const Average = (props) => {
- const text = 'keskiarvo'
 
  return (
    <p>
-     {text} {((props.good * 1) + (props.neutral * 0) + (props.bad * -1))     
+     {((props.good * 1) + (props.neutral * 0) + (props.bad * -1))     
      / (props.good + props.neutral + props.bad)}
    </p>
  )
 }
 
 const Positive = (props) => {
- const text = 'positiivisia'
 
  return (
    <p>
-     {text} {(props.good) / (props.good + props.neutral + props.bad) * 100} %
+     {(props.good) / (props.good + props.neutral + props.bad) * 100} %
    </p>
  )
+}
+
+const Statistic = (props) => {
+  const text = props.text
+  const value = props.value
+
+  return (
+    <p>
+      {text} {value}
+    </p>
+  )
 }
 
 const Statistics = (props) => {
@@ -62,41 +71,61 @@ const Statistics = (props) => {
 
  return (
    <div>
-     <h1>
-       {header}
-     </h1>
-     <div>
-       hyvä {props.good}
-     </div>
-     <div>
-       neutraali {props.neutral}
-     </div>
-     <div>
-       huono {props.bad}
-     </div>
-     <div>
-       <Total
-         good={props.good}
-         neutral={props.neutral}
-         bad={props.bad}>
-       </Total>
-     </div>
-     <div>
-       <Average
-         good={props.good}
-         neutral={props.neutral}
-         bad={props.bad}>
-       </Average>
-     </div>
-     <div>
-       <Positive
-         good={props.good}
-         neutral={props.neutral}
-         bad={props.bad}>
-       </Positive>
-     </div>
+  <h1>
+    {header}
+  </h1>
+   <table>
+     <tbody>
+      <tr>
+        <td>hyvä</td>
+        <td>neutraali</td>
+        <td>huono</td>
+        <td>yhteensä</td>
+        <td>keskiarvo</td>
+        <td>positiivisia</td>
+      </tr>
+      </tbody>
+      <tbody>
+      <tr>
+        <td>{props.good}</td>
+        <td>{props.neutral}</td>
+        <td>{props.bad}</td>
+        <td>{
+          <Total 
+          good={props.good} 
+          neutral= {props.neutral} 
+          bad= {props.bad} 
+        />
+        }</td>
+        <td>{
+          <Average
+          good={props.good}
+          neutral={props.neutral}
+          bad={props.bad}
+        />
+        }</td>
+        <td>{
+          <Positive
+          good={props.good}
+          neutral={props.neutral}
+          bad={props.bad}
+          />
+        }</td>
+      </tr>
+      </tbody>
+   </table>
    </div>
  )
+}
+
+const Button = (props) => {
+  const text = props.text
+
+  return (
+    <button onClick={props.onClick}>
+      {text}        
+    </button>
+  )
 }
 
 
@@ -114,15 +143,12 @@ const App = () => {
        <Feedback
           header = 'anna palautetta'>
        </Feedback>
-       <button onClick={() => setGood(good + 1)}>
-         hyvä
-       </button>
-       <button onClick={() => setNeutral(neutral + 1)}>
-         neutraali
-       </button>
-       <button onClick={() => setBad(bad + 1)}>
-         huono
-       </button>
+       <Button text='hyvä' onClick={() => setGood(good + 1)}>
+       </Button>
+       <Button text='neutraali' onClick={() => setNeutral(neutral + 1)}>
+       </Button>
+       <Button text='huono' onClick={() => setBad(bad + 1)}>
+       </Button>
      </div>
      <div>
        <Statistics
@@ -139,3 +165,4 @@ const App = () => {
 ReactDOM.render(<App />,
  document.getElementById('root')
 )
+  
