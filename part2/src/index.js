@@ -38,16 +38,18 @@ const Course = (props) => {
     <div>
       <Header course={props.course}></Header>
       <Content parts={props.course.parts}></Content>
+      <Total parts={props.course.parts}></Total>
     </div>
   )
 }
 
 const Total = (props) => {
+  const {parts} = props
+  const total =
+    parts.reduce( (accumulator, currentValue) => accumulator + currentValue.exercises, 0)
   return (
     <p>
-      yhteensä {props.parts[0].exercises
-      + props.parts[1].exercises
-      + props.parts[2].exercises} tehtävää
+      Total of {total} exercises
     </p>
   )
 }
