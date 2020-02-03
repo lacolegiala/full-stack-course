@@ -3,39 +3,52 @@ import './App.css';
 
 const App = () => {
   const [ persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
+    { 
+      name: 'Arto Hellas',
+      number: '12345790'
+    }
   ]) 
   const [ newName, setNewName ] = useState('')
+  const [ newNumber, setNewNumber ] = useState('')
 
   const newArray = persons.map(person => person.name)
   
-  const addName = (event) => {
+  const addContact = (event) => {
     event.preventDefault()
-    console.log('button clicked', event.target)
-    const nameObject = {
+    const personObject = {
       name: newName,
+      number: newNumber
     }
     
-      if (!newArray.includes(nameObject.name)) {
+      if (!newArray.includes(personObject.name)) {
       console.log(persons)
-      console.log(nameObject.name)
-      setPersons(persons.concat(nameObject))
+      console.log(personObject.name)
+      setPersons(persons.concat(personObject))
       setNewName('')
+      setNewNumber('')
       }
       else {
         window.alert(`${newName} is already added to the phonebook`)
+        setNewName('')
+        setNewNumber('')
       }
     
   }
+  
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
 
+  const handleNumberChange = (event) => {
+    setNewNumber(event.target.value)
+  }
+
+
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addName}>
+      <form onSubmit={addContact}>
         <div>
           name:
           <input
@@ -44,13 +57,20 @@ const App = () => {
           />
         </div>
         <div>
-          <button onClick={addName} type="submit">add</button>
+          number: 
+          <input
+            value={newNumber}
+            onChange={handleNumberChange}
+          />
+        </div>
+        <div>
+          <button onClick={addContact} type="submit">add</button>
         </div>
       </form>
       <h2>Numbers</h2>
       <ul>
         {persons.map(person =>
-          <div key={person.name}>{person.name}</div>)}
+        <div key={person.name}>{person.name}, {person.number}</div>)}
       </ul>
     </div>
   )
