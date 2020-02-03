@@ -7,22 +7,28 @@ const App = () => {
   ]) 
   const [ newName, setNewName ] = useState('')
 
+  const newArray = persons.map(person => person.name)
+  
   const addName = (event) => {
     event.preventDefault()
     console.log('button clicked', event.target)
     const nameObject = {
       name: newName,
-      id: persons.length + 1  
     }
-  
-    setPersons(persons.concat(nameObject))
-    setNewName('')
-    console.log(nameObject)
-    console.log(persons)
+    
+      if (!newArray.includes(nameObject.name)) {
+      console.log(persons)
+      console.log(nameObject.name)
+      setPersons(persons.concat(nameObject))
+      setNewName('')
+      }
+      else {
+        window.alert(`${newName} is already added to the phonebook`)
+      }
+    
   }
 
   const handleNameChange = (event) => {
-    console.log(event.target.value)
     setNewName(event.target.value)
   }
 
@@ -43,7 +49,8 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-        {persons.map(person => <div key={person.name}>{person.name}</div>)}
+        {persons.map(person =>
+          <div key={person.name}>{person.name}</div>)}
       </ul>
     </div>
   )
