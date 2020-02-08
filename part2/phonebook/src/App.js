@@ -2,12 +2,16 @@ import React, {useState, useEffect} from 'react';
 import './App.css';
 import personService from './services/persons'
 
-const Contacts = ( { persons }) => {
+
+const Contacts = ( { persons, deletePerson }) => {
 
   return (
     <ul>
       {persons.map(person =>
-      <div key={person.name}>{person.name}, {person.number}</div>)}
+      <div key={person.name}>
+        {person.name} {person.number}
+        <button onClick={() => deletePerson(person.id)}>delete</button>
+      </div>)}
     </ul>
   )
 }
@@ -37,20 +41,13 @@ const ContactForm = (props) => {
   )
 }
 
+
+
 const App = () => {
   const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
 
-  // const hook = () => {
-  //   console.log('effect')
-  //   axios
-  //     .get('http://localhost:3001/persons')
-  //     .then(response => {
-  //       console.log('promise fulfilled')
-  //       setPersons(response.data)
-  //     })
-  // }
   
   useEffect(() => {
     personService
@@ -60,11 +57,6 @@ const App = () => {
         })
   }, [])
 
-  // personService
-  //     .update(id, changedNote)
-  //     .then(response => {
-  //       setPersons(persons.map(person => person.id !== id ? person : response.data))
-  //     })
 
   const newArray = persons.map(person => person.name)
   
@@ -93,6 +85,7 @@ const App = () => {
     }
     
   }
+
   
 
   const handleNameChange = (event) => {
@@ -102,6 +95,20 @@ const App = () => {
   const handleNumberChange = (event) => {
     setNewNumber(event.target.value)
   }
+
+  const deletePerson = (id) => {
+    const toDelete = persons.find(p => p.id === id)
+    const ok = window.confirm(`Delete ${toDelete.name}`)
+    if (ok) {
+      personService.remove(id)
+        .then(response => {
+          setPersons(persons.filter(p => p.id !== id))
+        }).catch(() => {
+          setPersons(persons.filter(p => p.id !== id))
+        })
+    }
+  }
+
 
 
   return (
@@ -115,7 +122,7 @@ const App = () => {
         addContact={addContact}
       />
       <h2>Numbers</h2>
-      <Contacts persons={persons}/>
+      <Contacts persons={persons} deletePerson={deletePerson}/>
     </div>
   )
 
