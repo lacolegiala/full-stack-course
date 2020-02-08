@@ -1,15 +1,58 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.css';
+import axios from 'axios'
+
+const Contacts = ( { persons }) => {
+
+  return (
+    <ul>
+      {persons.map(person =>
+      <div key={person.name}>{person.name}, {person.number}</div>)}
+    </ul>
+  )
+}
+
+const ContactForm = (props) => {
+
+  return (
+    <form onSubmit={props.addContact}>
+      <div>
+        name:
+        <input
+          value={props.newName}
+          onChange={props.handleNameChange}
+        />
+      </div>
+      <div>
+        number: 
+        <input
+          value={props.newNumber}
+          onChange={props.handleNumberChange}
+        />
+      </div>
+      <div>
+        <button onClick={props.addContact} type="submit">add</button>
+      </div>
+    </form>
+  )
+}
 
 const App = () => {
-  const [ persons, setPersons] = useState([
-    { 
-      name: 'Arto Hellas',
-      number: '12345790'
-    }
-  ]) 
+  const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
+
+  const hook = () => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled')
+        setPersons(response.data)
+      })
+  }
+  
+  useEffect(hook, [])
 
   const newArray = persons.map(person => person.name)
   
@@ -20,18 +63,22 @@ const App = () => {
       number: newNumber
     }
     
-      if (!newArray.includes(personObject.name)) {
-      console.log(persons)
-      console.log(personObject.name)
-      setPersons(persons.concat(personObject))
-      setNewName('')
-      setNewNumber('')
-      }
-      else {
-        window.alert(`${newName} is already added to the phonebook`)
+    if (!newArray.includes(personObject.name)) {
+    
+      axios
+      .post('http://localhost:3001/persons', personObject)
+      .then(response => {
+        console.log(response)
+        setPersons(persons.concat(personObject))
         setNewName('')
         setNewNumber('')
-      }
+      })
+    }
+    else {
+      window.alert(`${newName} is already added to the phonebook`)
+      setNewName('')
+      setNewNumber('')
+    }
     
   }
   
@@ -48,30 +95,15 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addContact}>
-        <div>
-          name:
-          <input
-           value={newName}
-           onChange={handleNameChange}
-          />
-        </div>
-        <div>
-          number: 
-          <input
-            value={newNumber}
-            onChange={handleNumberChange}
-          />
-        </div>
-        <div>
-          <button onClick={addContact} type="submit">add</button>
-        </div>
-      </form>
+      <ContactForm 
+        handleNameChange={handleNameChange}
+        handleNumberChange={handleNumberChange}
+        newNumber={newNumber}
+        newName={newName}
+        addContact={addContact}
+      />
       <h2>Numbers</h2>
-      <ul>
-        {persons.map(person =>
-        <div key={person.name}>{person.name}, {person.number}</div>)}
-      </ul>
+      <Contacts persons={persons}/>
     </div>
   )
 
