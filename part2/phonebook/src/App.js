@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import './App.css';
-import axios from 'axios'
+import personService from './services/persons'
 
 const Contacts = ( { persons }) => {
 
@@ -42,17 +42,29 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
 
-  const hook = () => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
-      })
-  }
+  // const hook = () => {
+  //   console.log('effect')
+  //   axios
+  //     .get('http://localhost:3001/persons')
+  //     .then(response => {
+  //       console.log('promise fulfilled')
+  //       setPersons(response.data)
+  //     })
+  // }
   
-  useEffect(hook, [])
+  useEffect(() => {
+    personService
+      .getAll()
+        .then(initialPersons => {
+        setPersons(initialPersons)
+        })
+  }, [])
+
+  // personService
+  //     .update(id, changedNote)
+  //     .then(response => {
+  //       setPersons(persons.map(person => person.id !== id ? person : response.data))
+  //     })
 
   const newArray = persons.map(person => person.name)
   
@@ -62,14 +74,14 @@ const App = () => {
       name: newName,
       number: newNumber
     }
+
     
     if (!newArray.includes(personObject.name)) {
-    
-      axios
-      .post('http://localhost:3001/persons', personObject)
-      .then(response => {
-        console.log(response)
-        setPersons(persons.concat(personObject))
+      
+      personService
+      .create(personObject)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
       })
