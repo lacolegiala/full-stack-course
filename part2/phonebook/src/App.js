@@ -3,20 +3,19 @@ import './App.css';
 import personService from './services/persons'
 
 const Contacts = ( { persons, deletePerson }) => {
-
   return (
     <ul>
       {persons.map(person =>
-      <div key={person.name}>
-        {person.name} {person.number}
-        <button onClick={() => deletePerson(person.id)}>delete</button>
-      </div>)}
+        <div key={person.name}>
+          {person.name} {person.number}
+          <button onClick={() => deletePerson(person.id)}>delete</button>
+        </div>
+      )}
     </ul>
   )
 }
 
 const ContactForm = (props) => {
-
   return (
     <form onSubmit={props.addContact}>
       <div>
@@ -41,7 +40,6 @@ const ContactForm = (props) => {
 }
 
 const Notification = (props) => {
-
   return (
     <div className="notification">
       {props.text}
@@ -120,11 +118,9 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <ul></ul>
       {text.length > 0 &&
         <Notification text={text}/>
       }
-      <ul></ul>
       <ContactForm 
         handleNameChange={handleNameChange}
         handleNumberChange={handleNumberChange}
