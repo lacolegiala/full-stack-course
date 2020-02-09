@@ -7,6 +7,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.notification {
+  color: green;
+  background: lightgrey;
+  font-size: 15px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 7px;
+  margin-bottom: 15px;
+}  
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

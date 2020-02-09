@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import './App.css';
 import personService from './services/persons'
 
-
 const Contacts = ( { persons, deletePerson }) => {
 
   return (
@@ -41,12 +40,20 @@ const ContactForm = (props) => {
   )
 }
 
+const Notification = (props) => {
 
+  return (
+    <a href="/#" className="notification">
+      {props.text}
+    </a>
+  )
+}
 
 const App = () => {
   const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
+  const [ text, setText ] = useState('')
 
   
   useEffect(() => {
@@ -57,7 +64,6 @@ const App = () => {
         })
   }, [])
 
-
   const newArray = persons.map(person => person.name)
   
   const addContact = (event) => {
@@ -67,15 +73,16 @@ const App = () => {
       number: newNumber
     }
 
-    
     if (!newArray.includes(personObject.name)) {
       
       personService
       .create(personObject)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
+        setText(`Added ${newName} to the phonebook`)
         setNewName('')
         setNewNumber('')
+        setTimeout(setText, 3000, '')
       })
     }
     else {
@@ -83,10 +90,7 @@ const App = () => {
       setNewName('')
       setNewNumber('')
     }
-    
   }
-
-  
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -103,17 +107,22 @@ const App = () => {
       personService.remove(id)
         .then(response => {
           setPersons(persons.filter(p => p.id !== id))
+          setText(`Deleted ${toDelete.name}`)
+          setTimeout(setText, 3000, '')
         }).catch(() => {
           setPersons(persons.filter(p => p.id !== id))
         })
     }
   }
 
-
-
   return (
     <div>
       <h2>Phonebook</h2>
+      <ul></ul>
+      {text.length > 0 &&
+        <Notification text={text}/>
+      }
+      <ul></ul>
       <ContactForm 
         handleNameChange={handleNameChange}
         handleNumberChange={handleNumberChange}
@@ -125,6 +134,6 @@ const App = () => {
       <Contacts persons={persons} deletePerson={deletePerson}/>
     </div>
   )
-
 }
+
 export default App;
