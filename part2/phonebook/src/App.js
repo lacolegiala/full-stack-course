@@ -43,9 +43,9 @@ const ContactForm = (props) => {
 const Notification = (props) => {
 
   return (
-    <a href="/#" className="notification">
+    <div className="notification">
       {props.text}
-    </a>
+    </div>
   )
 }
 
@@ -55,12 +55,16 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ text, setText ] = useState('')
 
+  const flashNotification = (text) => {
+    setText(text)
+    setTimeout(setText, 3000, '')
+  }
   
   useEffect(() => {
     personService
       .getAll()
         .then(initialPersons => {
-        setPersons(initialPersons)
+          setPersons(initialPersons)
         })
   }, [])
 
@@ -76,14 +80,13 @@ const App = () => {
     if (!newArray.includes(personObject.name)) {
       
       personService
-      .create(personObject)
-      .then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson))
-        setText(`Added ${newName} to the phonebook`)
-        setNewName('')
-        setNewNumber('')
-        setTimeout(setText, 3000, '')
-      })
+        .create(personObject)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+          flashNotification(`Added ${newName} to the phonebook`)
+        })
     }
     else {
       window.alert(`${newName} is already added to the phonebook`)
@@ -107,8 +110,7 @@ const App = () => {
       personService.remove(id)
         .then(response => {
           setPersons(persons.filter(p => p.id !== id))
-          setText(`Deleted ${toDelete.name}`)
-          setTimeout(setText, 3000, '')
+          flashNotification(`Deleted ${toDelete.name}`)
         }).catch(() => {
           setPersons(persons.filter(p => p.id !== id))
         })
