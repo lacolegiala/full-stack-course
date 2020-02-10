@@ -25,13 +25,13 @@ const ContactForm = (props) => {
           onChange={props.handleNameChange}
         />
       </div>
-      <div>
+      {/* <div>
         number: 
         <input
           value={props.newNumber}
           onChange={props.handleNumberChange}
         />
-      </div>
+      </div> */}
       <div>
         <button onClick={props.addContact} type="submit">add</button>
       </div>
@@ -50,7 +50,7 @@ const Notification = (props) => {
 const App = () => {
   const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
-  const [ newNumber, setNewNumber ] = useState('')
+  // const [ newNumber, setNewNumber ] = useState('')
   const [ text, setText ] = useState('')
 
   const flashNotification = (text) => {
@@ -72,7 +72,7 @@ const App = () => {
     event.preventDefault()
     const personObject = {
       name: newName,
-      number: newNumber
+      // number: newNumber
     }
 
     if (!newArray.includes(personObject.name)) {
@@ -82,14 +82,14 @@ const App = () => {
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
           setNewName('')
-          setNewNumber('')
+          // setNewNumber('')
           flashNotification(`Added ${newName} to the phonebook`)
         })
     }
     else {
       window.alert(`${newName} is already added to the phonebook`)
       setNewName('')
-      setNewNumber('')
+      // setNewNumber('')
     }
   }
 
@@ -97,9 +97,9 @@ const App = () => {
     setNewName(event.target.value)
   }
 
-  const handleNumberChange = (event) => {
-    setNewNumber(event.target.value)
-  }
+  // const handleNumberChange = (event) => {
+  //   setNewNumber(event.target.value)
+  // }
 
   const deletePerson = (id) => {
     const toDelete = persons.find(p => p.id === id)
@@ -123,8 +123,8 @@ const App = () => {
       }
       <ContactForm 
         handleNameChange={handleNameChange}
-        handleNumberChange={handleNumberChange}
-        newNumber={newNumber}
+        // handleNumberChange={handleNumberChange}
+        // newNumber={newNumber}
         newName={newName}
         addContact={addContact}
       />
