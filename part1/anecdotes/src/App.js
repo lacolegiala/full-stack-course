@@ -1,30 +1,54 @@
-import App from '.App.css';
-
 import React, { useState } from 'react'
-import ReactDOM from 'react-dom'
 
 const App = (props) => {
   const [selected, setSelected] = useState(0)
+  const [pressed, setPressed] = useState(false)
+  const [voted, setVoted] = useState(0)
 
   return (
     <div>
-      {props.anecdotes[selected]}
+      <Button onClick={() => {
+        setSelected(randomNumber(props.anecdotes.length))
+        setPressed(true)
+      }
+      }
+      text='Next anecdote'>
+      </Button> 
+      <div>
+        {pressed===true ?
+        <Button onClick={() => {
+          setVoted(voted + 1)
+          props.points[selected] += 1
+          console.log("Voted ", props.points[selected])
+        }
+        } 
+        text='Vote'></Button> : ''}
+      </div>
+      <div>
+        {pressed===true ?
+        props.anecdotes[selected] : ''}
+      </div>
+      <div>
+        {pressed===true ?
+        props.points[selected] : ''}
+      </div>
     </div>
   )
 }
 
-const anecdotes = [
-  'If it hurts, do it more often',
-  'Adding manpower to a late software project makes it later!',
-  'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
-  'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
-  'Premature optimization is the root of all evil.',
-  'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
-]
+const Button = (props) => {
+  const text = props.text
 
-ReactDOM.render(
-  <App anecdotes={anecdotes} />,
-  document.getElementById('root')
-)
+  return (
+    <button onClick={props.onClick}>
+      {text}
+    </button>
+  )
+}
+
+const randomNumber = (numberOfAnecdotes) => {
+  return Math.floor(Math.random() * numberOfAnecdotes)
+}
+
 
 export default App;
