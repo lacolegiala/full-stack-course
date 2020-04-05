@@ -17,7 +17,7 @@ const points = Array.apply(null, new Array(anecdotes.length)).map(Number.prototy
 
 
 
-ReactDOM.render(<App lol={1} anecdotes={anecdotes} points={points}/>, document.getElementById('root'));
+ReactDOM.render(<App anecdotes={anecdotes} points={points}/>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

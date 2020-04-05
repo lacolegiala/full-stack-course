@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 const App = (props) => {
   const [selected, setSelected] = useState(0)
   const [pressed, setPressed] = useState(false)
-  const [voted, setVoted] = useState(0)
+  const [array, setArray] = useState(props.points)
 
   return (
     <div>
@@ -15,22 +15,19 @@ const App = (props) => {
       text='Next anecdote'>
       </Button> 
       <div>
-        {pressed===true ?
         <Button onClick={() => {
-          setVoted(voted + 1)
-          props.points[selected] += 1
-          console.log("Voted ", props.points[selected])
+          const copy = [...array]
+          copy[selected] += 1
+          setArray(copy)
+          console.log("Voted ", copy[selected])
         }
         } 
-        text='Vote'></Button> : ''}
+        text='Vote'></Button>
+        {array[selected]}
       </div>
       <div>
         {pressed===true ?
-        props.anecdotes[selected] : ''}
-      </div>
-      <div>
-        {pressed===true ?
-        props.points[selected] : ''}
+        props.anecdotes[selected] : props.anecdotes[0]}
       </div>
     </div>
   )
