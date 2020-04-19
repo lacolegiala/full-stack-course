@@ -2,33 +2,34 @@ import React, { useState } from 'react'
 
 const App = (props) => {
   const [selected, setSelected] = useState(0)
-  const [pressed, setPressed] = useState(false)
-  const [array, setArray] = useState(props.points)
+  const [votes, setVotes] = useState(props.points)
 
   return (
+    
     <div>
+      <h2>Anecdote of the day</h2>
       <Button onClick={() => {
         setSelected(randomNumber(props.anecdotes.length))
-        setPressed(true)
       }
       }
       text='Next anecdote'>
       </Button> 
       <div>
         <Button onClick={() => {
-          const copy = [...array]
-          copy[selected] += 1
-          setArray(copy)
-          console.log("Voted ", copy[selected])
+          const copyOfVotes = [...votes]
+          copyOfVotes[selected] += 1
+          setVotes(copyOfVotes)
+          console.log("Voted ", copyOfVotes[selected])
         }
         } 
         text='Vote'></Button>
-        {array[selected]}
+        This has {votes[selected]} votes
       </div>
       <div>
-        {pressed===true ?
-        props.anecdotes[selected] : props.anecdotes[0]}
+        {props.anecdotes[selected]}
       </div>
+      <h2>Anecdote with most votes</h2>
+        <div>{props.anecdotes[mostVotes(votes)]}</div>
     </div>
   )
 }
@@ -45,6 +46,19 @@ const Button = (props) => {
 
 const randomNumber = (numberOfAnecdotes) => {
   return Math.floor(Math.random() * numberOfAnecdotes)
+}
+
+const mostVotes = (votes) => {
+  const maxValue = Math.max(...votes)
+  let maxIndex = 0
+
+  for (let i = 0; i < votes.length; i++) {
+    if (votes[i] === maxValue) {
+      maxIndex = i
+    }
+  }
+
+  return maxIndex
 }
 
 
