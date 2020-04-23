@@ -37,13 +37,11 @@ const Content = (props) => {
 }
 
 const Total = (props) => {
-  return (
-    <p>
-      yhteensä {props.parts[0].exercises
-      + props.parts[1].exercises
-      + props.parts[2].exercises} tehtävää
-    </p>
-  )
+
+  const total = props.parts.reduce(function(sum, part) {
+    return sum + part.exercises
+  }, 0)
+  return total
 }
 
 const App = () => {
