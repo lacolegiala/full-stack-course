@@ -25,13 +25,13 @@ const ContactForm = (props) => {
           onChange={props.handleNameChange}
         />
       </div>
-      {/* <div>
+      {<div>
         number: 
         <input
           value={props.newNumber}
           onChange={props.handleNumberChange}
         />
-      </div> */}
+      </div>}
       <div>
         <button onClick={props.addContact} type="submit">add</button>
       </div>
