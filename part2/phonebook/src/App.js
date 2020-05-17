@@ -17,25 +17,37 @@ const Contacts = ( { persons, deletePerson }) => {
 
 const ContactForm = (props) => {
   return (
-    <form onSubmit={props.addContact}>
-      <div>
-        name:
-        <input
-          value={props.newName}
-          onChange={props.handleNameChange}
-        />
-      </div>
-      {<div>
-        number: 
-        <input
-          value={props.newNumber}
-          onChange={props.handleNumberChange}
-        />
-      </div>}
-      <div>
-        <button onClick={props.addContact} type="submit">add</button>
-      </div>
-    </form>
+    //TODO jatka tehtävää 2.9 eli tee filter ominaisuus
+    <div>
+      <form onSubmit={props.filterContact}>
+        <div>
+          filter shown with
+          <input
+            value={props.filteringString}
+            onChange={props.handleFilter}
+          />
+        </div>
+      </form>
+      <form onSubmit={props.addContact}>
+        <div>
+          name:
+          <input
+            value={props.newName}
+            onChange={props.handleNameChange}
+          />
+        </div>
+        <div>
+          number: 
+          <input
+            value={props.newNumber}
+            onChange={props.handleNumberChange}
+          />
+        </div>
+        <div>
+          <button onClick={props.addContact} type="submit">add</button>
+        </div>
+      </form>
+    </div>
   )
 }
 
@@ -50,8 +62,14 @@ const Notification = (props) => {
 const App = () => {
   const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
-  // const [ newNumber, setNewNumber ] = useState('')
+  const [ newNumber, setNewNumber ] = useState('')
   const [ text, setText ] = useState('')
+  const [showAll, setShowAll] = useState([  
+    { name: 'Arto Hellas', number: '040-123456' },
+    { name: 'Ada Lovelace', number: '39-44-5323523' },
+    { name: 'Dan Abramov', number: '12-43-234345' },
+    { name: 'Mary Poppendieck', number: '39-23-6423122' }
+  ])
 
   const flashNotification = (text) => {
     setText(text)
@@ -72,7 +90,7 @@ const App = () => {
     event.preventDefault()
     const personObject = {
       name: newName,
-      // number: newNumber
+      number: newNumber
     }
 
     if (!newArray.includes(personObject.name)) {
@@ -82,14 +100,14 @@ const App = () => {
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
           setNewName('')
-          // setNewNumber('')
+          setNewNumber('')
           flashNotification(`Added ${newName} to the phonebook`)
         })
     }
     else {
       window.alert(`${newName} is already added to the phonebook`)
       setNewName('')
-      // setNewNumber('')
+      setNewNumber('')
     }
   }
 
@@ -97,9 +115,9 @@ const App = () => {
     setNewName(event.target.value)
   }
 
-  // const handleNumberChange = (event) => {
-  //   setNewNumber(event.target.value)
-  // }
+  const handleNumberChange = (event) => {
+    setNewNumber(event.target.value)
+  }
 
   const deletePerson = (id) => {
     const toDelete = persons.find(p => p.id === id)
@@ -115,6 +133,10 @@ const App = () => {
     }
   }
 
+  const contactsToShow = showAll
+    ? persons
+    : persons.filter(person => person.con)
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -123,8 +145,8 @@ const App = () => {
       }
       <ContactForm 
         handleNameChange={handleNameChange}
-        // handleNumberChange={handleNumberChange}
-        // newNumber={newNumber}
+        handleNumberChange={handleNumberChange}
+        newNumber={newNumber}
         newName={newName}
         addContact={addContact}
       />
