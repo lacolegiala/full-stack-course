@@ -15,39 +15,39 @@ const Contacts = ( { persons, deletePerson }) => {
   )
 }
 
+const Filter = (props) => {
+  return (
+    <div>
+      filter shown with
+      <input
+        //value={props.filteringString}
+        onChange={props.handleFilter}
+      />
+    </div>
+  )
+}
+
 const ContactForm = (props) => {
   return (
-    //TODO jatka tehtävää 2.9 eli tee filter ominaisuus
-    <div>
-      <form onSubmit={props.filterContact}>
-        <div>
-          filter shown with
-          <input
-            value={props.filteringString}
-            onChange={props.handleFilter}
-          />
-        </div>
-      </form>
-      <form onSubmit={props.addContact}>
-        <div>
-          name:
-          <input
-            value={props.newName}
-            onChange={props.handleNameChange}
-          />
-        </div>
-        <div>
-          number: 
-          <input
-            value={props.newNumber}
-            onChange={props.handleNumberChange}
-          />
-        </div>
-        <div>
-          <button onClick={props.addContact} type="submit">add</button>
-        </div>
-      </form>
-    </div>
+    <form onSubmit={props.addContact}>
+      <div>
+        name:
+        <input
+          value={props.newName}
+          onChange={props.handleNameChange}
+        />
+      </div>
+      <div>
+        number: 
+        <input
+          value={props.newNumber}
+          onChange={props.handleNumberChange}
+        />
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
   )
 }
 
@@ -64,12 +64,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ text, setText ] = useState('')
-  const [showAll, setShowAll] = useState([  
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ])
+  const [ query, setQuery ] = useState('')
 
   const flashNotification = (text) => {
     setText(text)
@@ -87,6 +82,7 @@ const App = () => {
   const newArray = persons.map(person => person.name)
   
   const addContact = (event) => {
+    // defaulttina selaimet lataavat koko sivun uudelleen, preventDefaultilla estetään se
     event.preventDefault()
     const personObject = {
       name: newName,
@@ -111,6 +107,11 @@ const App = () => {
     }
   }
 
+
+  const handleFilter = (event) => {
+    setQuery(event.target.value)
+  }
+
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
@@ -133,9 +134,13 @@ const App = () => {
     }
   }
 
-  const contactsToShow = showAll
+  const contactsToShow = query === ''
     ? persons
-    : persons.filter(person => person.con)
+    : persons.filter(person =>
+      person.name.toLowerCase().includes(query)
+    )
+
+
 
   return (
     <div>
@@ -143,6 +148,7 @@ const App = () => {
       {text.length > 0 &&
         <Notification text={text}/>
       }
+      <Filter handleFilter={handleFilter}></Filter>
       <ContactForm 
         handleNameChange={handleNameChange}
         handleNumberChange={handleNumberChange}
@@ -151,7 +157,7 @@ const App = () => {
         addContact={addContact}
       />
       <h2>Numbers</h2>
-      <Contacts persons={persons} deletePerson={deletePerson}/>
+      <Contacts persons={contactsToShow} deletePerson={deletePerson}/>
     </div>
   )
 }
