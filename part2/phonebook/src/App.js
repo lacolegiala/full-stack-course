@@ -20,7 +20,7 @@ const Filter = (props) => {
     <div>
       filter shown with
       <input
-        //value={props.filteringString}
+        value={props.filteringString}
         onChange={props.handleFilter}
       />
     </div>
@@ -148,7 +148,7 @@ const App = () => {
       {text.length > 0 &&
         <Notification text={text}/>
       }
-      <Filter handleFilter={handleFilter}></Filter>
+      <Filter filteringString={query} handleFilter={handleFilter}></Filter>
       <ContactForm 
         handleNameChange={handleNameChange}
         handleNumberChange={handleNumberChange}
