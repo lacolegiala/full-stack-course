@@ -2,13 +2,13 @@ import React, {useState, useEffect} from 'react';
 import './App.css';
 import personService from './services/persons'
 
-const Contacts = ( { persons, deletePerson }) => {
+const Contacts = (props) => {
   return (
     <ul>
-      {persons.map(person =>
+      {props.persons.map(person =>
         <div key={person.name}>
           {person.name} {person.number}
-          <button onClick={() => deletePerson(person.id)}>delete</button>
+          <button onClick={() => props.deletePerson(person.id)}>delete</button>
         </div>
       )}
     </ul>
