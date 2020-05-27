@@ -91,7 +91,6 @@ function App() {
   console.log('render', countries.length, 'countries')
 
   const handleFilter = (event) => {
-    console.log(event.target.value)
     setQuery(event.target.value)
   }
 
