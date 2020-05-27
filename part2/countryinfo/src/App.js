@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import './App.css';
 import axios from 'axios';
 
-
 const Filter = (props) => {
   return (
     <div>
@@ -15,11 +14,6 @@ const Filter = (props) => {
   )
 }
 
-const LanguageHeader = (props) => {
-  return (
-    <h3>{props.country.language}</h3>
-  )
-}
 
 const CountryList = (props) => {
     return (
@@ -35,22 +29,31 @@ const CountryList = (props) => {
 
 const BasicInfo = (props) => {
   return (
-    <ul>
+    <div>
       {props.countries.map(country =>
         <div key={country.name}>
           <h2> {country.name} </h2>
           <ul> capital {country.capital} </ul>
           <ul> population {country.population} </ul>
+          <h3> Languages </h3>
         </div>
       )}
-    </ul>
+    </div>
   )
 }
 
 const Languages = (props) => {
   return (
     <div>
-      <li>{props.language}</li>
+      {props.countries.map(country => 
+        <div key={country.name}>
+          {country.languages.map(language => 
+            <li key={language.name}>
+              {language.name}
+            </li>
+          )}
+        </div>
+      )}
     </div>
   )
 }
@@ -58,7 +61,15 @@ const Languages = (props) => {
 const Flag = (props) => {
   return (
     <div>
-      Flag here
+      {props.countries.map(country =>
+        <img
+        alt=''
+         src={country.flag}
+         key={country.name}
+         width="170"
+         crop="scale">
+        </img>
+      )}
     </div>
   )
 }
@@ -67,7 +78,6 @@ const Flag = (props) => {
 function App() {
   const [ countries, setCountries ] = useState([]) 
   const [ query, setQuery ] = useState('')
-  const [ renderCountryInfo, setRenderCountryInfo ] = useState(false)
 
   useEffect(() => {
     console.log('effect')
@@ -87,9 +97,8 @@ function App() {
 
   const countriesToShow =
     countries.filter(country =>
-        country.name.toLowerCase().includes(query)
+        country.name.toLowerCase().includes(query.toLowerCase())
     )
-
 
   return (
     <div>
@@ -98,10 +107,13 @@ function App() {
         ? <CountryList countries={countriesToShow} query={query}></CountryList>
         : countriesToShow.length > 10 
         ? 'Too many countries, please specify'
-        : <BasicInfo countries={countriesToShow}></BasicInfo>
+        :
+         <div>
+          <BasicInfo countries={countriesToShow}></BasicInfo>
+          <Languages countries={countriesToShow}></Languages>
+          <Flag countries={countriesToShow}></Flag>
+         </div>
       }
-      {/* <Languages language='Swiss'></Languages>
-      <Flag></Flag> */}
     </div>
   )
 }
