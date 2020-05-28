@@ -16,15 +16,18 @@ const Filter = (props) => {
 
 
 const CountryList = (props) => {
-    return (
-      <ul>
-        {props.countries.map(country =>
-          <div key={country.name}>
-            {country.name}
-          </div>
-        )}
-      </ul>
-    )
+  return (
+    <ul>
+      {props.countries.map(country =>
+        <div key={country.name}>
+          {country.name}
+          <button onClick={() => props.showCountryInfo(country.name)}>
+            show
+          </button>
+        </div>
+      )}
+    </ul>
+  )
 }
 
 const BasicInfo = (props) => {
@@ -78,6 +81,7 @@ const Flag = (props) => {
 function App() {
   const [ countries, setCountries ] = useState([]) 
   const [ query, setQuery ] = useState('')
+  const [ showInfo, setShowInfo ] = useState(false)
 
   useEffect(() => {
     console.log('effect')
@@ -91,19 +95,26 @@ function App() {
   console.log('render', countries.length, 'countries')
 
   const handleFilter = (event) => {
+    setShowInfo(false)
     setQuery(event.target.value)
   }
 
+  
   const countriesToShow =
     countries.filter(country =>
-        country.name.toLowerCase().includes(query.toLowerCase())
+      country.name.toLowerCase().includes(query.toLowerCase())
     )
+
+  const showCountry = (name) => {
+    setQuery(name)
+    setShowInfo(true)
+  }
 
   return (
     <div>
       <Filter filteringString={query} handleFilter={handleFilter}> </Filter>
-      {countriesToShow.length <= 10 && countriesToShow.length >= 2 
-        ? <CountryList countries={countriesToShow} query={query}></CountryList>
+      {countriesToShow.length <= 10 && countriesToShow.length >= 2 && !showInfo 
+        ? <CountryList countries={countriesToShow} query={query} showCountryInfo={showCountry}></CountryList>
         : countriesToShow.length > 10 
         ? 'Too many countries, please specify'
         :
