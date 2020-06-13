@@ -61,18 +61,67 @@ const Languages = (props) => {
   )
 }
 
+
 const Flag = (props) => {
   return (
     <div>
       {props.countries.map(country =>
         <img
-        alt=''
-         src={country.flag}
-         key={country.name}
-         width="170"
-         crop="scale">
+          alt={'Flag of ' + country.name}
+          src={country.flag}
+          key={country.name}
+          width="170"
+          crop="scale">
         </img>
       )}
+    </div>
+  )
+}
+
+const Weather = (props) => {
+  const forecast = props.forecast
+  return (
+    <div>
+      <div>
+        <h3>Weather in {forecast.location.name}</h3>
+        <ul>temperature: {forecast.current.temperature}</ul>  
+        <img
+          alt={'Weather in ' + forecast.location.name}
+          src={forecast.current.weather_icons}>
+        </img>
+        <ul>
+          wind: {forecast.current.wind_speed}
+          mph direction {forecast.current.wind_dir}
+        </ul>
+      </div>
+    </div>
+  )
+  
+}
+
+const AllCountryInfo = (props) => {
+  const [ forecast, setForecast ] = useState(undefined)
+  const countries = props.countries
+  const capital = props.capital
+  const params = {
+    access_key: process.env.REACT_APP_API_KEY,
+    query: capital
+  }
+  useEffect(() => {
+    axios.get('http://api.weatherstack.com/current', {params})
+      .then(response => {
+        setForecast(response.data)
+      })
+  }, [])  
+  return (
+    <div>
+      <BasicInfo countries = {countries}></BasicInfo>
+      <Languages countries = {countries}></Languages>
+      <Flag countries = {countries}></Flag>
+      {forecast !== undefined
+        ? <Weather forecast={forecast}></Weather>
+        : null
+      }
     </div>
   )
 }
@@ -81,49 +130,63 @@ const Flag = (props) => {
 function App() {
   const [ countries, setCountries ] = useState([]) 
   const [ query, setQuery ] = useState('')
-  const [ showInfo, setShowInfo ] = useState(false)
-
-  useEffect(() => {
-    console.log('effect')
-    axios
-      .get('https://restcountries.eu/rest/v2/all')
-      .then(response => {
-        console.log('promise fulfilled')
-        setCountries(response.data)
-      })
-  }, [])
-  console.log('render', countries.length, 'countries')
-
-  const handleFilter = (event) => {
-    setShowInfo(false)
-    setQuery(event.target.value)
-  }
 
   
+  useEffect(() => {
+    axios.get('https://restcountries.eu/rest/v2/all')
+    .then(response => {
+      setCountries(response.data)
+    })
+  }, [])
+  
+  const handleFilter = (event) => {
+    setQuery(event.target.value)
+  }
+  
   const countriesToShow =
-    countries.filter(country =>
-      country.name.toLowerCase().includes(query.toLowerCase())
-    )
+    query === ''
+      ? []
+      : countries.filter(country =>
+          country.name.toLowerCase().includes(query.toLowerCase())
+        )
+
+    
 
   const showCountry = (name) => {
     setQuery(name)
-    setShowInfo(true)
   }
+
+
+  function renderView () {
+    if (countriesToShow.length === 1) {
+      return (
+        <div>
+          <AllCountryInfo countries={countriesToShow} capital={countriesToShow[0].capital}></AllCountryInfo>
+        </div>
+      )
+    }
+    else if (countriesToShow.length <= 10) {
+      return (
+        <CountryList countries={countriesToShow} query={query} showCountryInfo={showCountry}></CountryList>
+      )
+    }
+    else if (countriesToShow.length > 10) {
+      return (
+        'Too many countries, please specify'
+      )
+    }
+    else {
+      return null
+    }
+  }
+
+
+    
 
   return (
     <div>
       <Filter filteringString={query} handleFilter={handleFilter}> </Filter>
-      {countriesToShow.length <= 10 && countriesToShow.length >= 2 && !showInfo 
-        ? <CountryList countries={countriesToShow} query={query} showCountryInfo={showCountry}></CountryList>
-        : countriesToShow.length > 10 
-        ? 'Too many countries, please specify'
-        :
-         <div>
-          <BasicInfo countries={countriesToShow}></BasicInfo>
-          <Languages countries={countriesToShow}></Languages>
-          <Flag countries={countriesToShow}></Flag>
-         </div>
-      }
+      {renderView()}
     </div>
   )
 }
