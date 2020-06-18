@@ -59,6 +59,7 @@ const Notification = (props) => {
   )
 }
 
+
 const App = () => {
   const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
@@ -79,6 +80,7 @@ const App = () => {
         })
   }, [])
 
+  
   const newArray = persons.map(person => person.name)
   
   const addContact = (event) => {
@@ -90,22 +92,32 @@ const App = () => {
     }
 
     if (!newArray.includes(personObject.name)) {
-      
       personService
         .create(personObject)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
-          setNewName('')
-          setNewNumber('')
           flashNotification(`Added ${newName} to the phonebook`)
         })
     }
     else {
-      window.alert(`${newName} is already added to the phonebook`)
-      setNewName('')
-      setNewNumber('')
+      const contact = persons.find(person => person.name === newName)
+      const changedContact = {...contact, number: newNumber}
+      const ok = window.confirm(`${newName} is already added to the phonebook. Replace the old number with new one?`)
+      if (ok) {
+        personService.update(contact.id, changedContact)
+        .then(response => {
+          setPersons(persons.map(person => person.id !== contact.id ? person : changedContact))
+        })
+        .catch(error => {
+          console.log('fail')
+        })
+      }
     }
+    setNewName('')
+    setNewNumber('')
   }
+
+    
 
 
   const handleFilter = (event) => {
@@ -119,6 +131,7 @@ const App = () => {
   const handleNumberChange = (event) => {
     setNewNumber(event.target.value)
   }
+
 
   const deletePerson = (id) => {
     const toDelete = persons.find(p => p.id === id)
