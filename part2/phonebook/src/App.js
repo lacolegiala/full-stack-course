@@ -91,7 +91,7 @@ const App = () => {
     }
     
     const personNames = persons.map(person => person.name)
-    
+
     if (!personNames.includes(personObject.name)) {
       personService
         .create(personObject)
@@ -107,10 +107,11 @@ const App = () => {
       if (ok) {
         personService.update(contact.id, changedContact)
         .then(response => {
-          setPersons(persons.map(person => person.id !== contact.id ? person : changedContact))
+          setPersons(persons.map(person => person.id !== contact.id ? person : response))
         })
         .catch(error => {
-          console.log('fail')
+          console.log('fail', error)
+          alert('Something went wrong, try again later')
         })
       }
     }
