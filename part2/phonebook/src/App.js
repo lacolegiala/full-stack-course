@@ -81,7 +81,6 @@ const App = () => {
   }, [])
 
   
-  const newArray = persons.map(person => person.name)
   
   const addContact = (event) => {
     // defaulttina selaimet lataavat koko sivun uudelleen, preventDefaultilla estetään se
@@ -90,8 +89,10 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-
-    if (!newArray.includes(personObject.name)) {
+    
+    const personNames = persons.map(person => person.name)
+    
+    if (!personNames.includes(personObject.name)) {
       personService
         .create(personObject)
         .then(returnedPerson => {

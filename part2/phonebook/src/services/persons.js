@@ -20,10 +20,8 @@ const remove = async (id) => {
 }
 
 const update = async (id, personObject) => {
-  console.log(id, personObject, ' id and person')
   const request = axios.put(`${baseUrl}/${id}`, personObject)
   const response = await request
-  console.log(response.data, ' update response')
   return response.data
 }
 
