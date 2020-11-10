@@ -4,7 +4,8 @@
   "description": "",
   "main": "backend.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "nak": "node backend.js"
   },
   "repository": {
     "type": "git",
