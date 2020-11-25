@@ -1,20 +1,10 @@
 import React from 'react'
 import { gql, useQuery } from '@apollo/client'
 
-const ALL_BOOKS = gql`
-  query {
-    allBooks {
-      title,
-      author,
-      published
-    }
-  }
-`
+import  { ALL_BOOKS } from '../queries'
 
 const Books = (props) => {
-  const books = useQuery(ALL_BOOKS, {
-    pollInterval: 2000
-  })
+  const books = useQuery(ALL_BOOKS)
 
   if (!props.show) {
     return null
