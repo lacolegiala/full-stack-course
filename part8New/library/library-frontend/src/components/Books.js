@@ -12,7 +12,9 @@ const ALL_BOOKS = gql`
 `
 
 const Books = (props) => {
-  const books = useQuery(ALL_BOOKS)
+  const books = useQuery(ALL_BOOKS, {
+    pollInterval: 2000
+  })
 
   if (!props.show) {
     return null
