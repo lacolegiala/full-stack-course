@@ -162,7 +162,7 @@ const resolvers = {
       }
 
       const upDatedAuthor = { ...author, born: args.setBornTo }
-      authors = authors.concat(upDatedAuthor)
+      authors = authors.map(author => author.name === args.name ? upDatedAuthor : author)
       return upDatedAuthor
     }
   }
