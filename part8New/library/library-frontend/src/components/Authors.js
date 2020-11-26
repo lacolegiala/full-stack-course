@@ -1,16 +1,17 @@
   
 import React, { useState, useEffect } from 'react'
 import { useQuery, useMutation } from '@apollo/client'
+import Select from 'react-select';
 
 import  { ALL_AUTHORS, EDIT_AUTHOR } from '../queries'
 
 
 const Authors = (props) => {
-  const authors = useQuery(ALL_AUTHORS)
-
-  const [ authorToEdit, setAuthorToEdit ] = useState('')
   const [ birthYear, setBirthYear ] = useState('')
+  const [ selectedAuthor, setSelectedAuthor ] = useState(null);
   const [ errorMessage, setErrorMessage ] = useState(null)
+  
+  const authors = useQuery(ALL_AUTHORS)
 
   const [ editAuthor, result ] = useMutation(EDIT_AUTHOR, {
     refetchQueries: [ { query: ALL_AUTHORS } ]
@@ -19,9 +20,9 @@ const Authors = (props) => {
   const submit = async (event) => {
     event.preventDefault()
 
-    editAuthor({ variables: { name: authorToEdit, setBornTo: birthYear } })
+    editAuthor({ variables: { name: selectedAuthor.value, setBornTo: birthYear } })
 
-    setAuthorToEdit('')
+    setSelectedAuthor(null)
     setBirthYear('')
   }
 
@@ -46,6 +47,13 @@ const Authors = (props) => {
     return <div>loading...</div>
   }
 
+  const authorNames = authors.data.allAuthors.map(function (author) {
+    return {
+      value: author.name,
+      label: author.name
+    }
+  })
+  
 
   return (
     <div>
@@ -74,10 +82,10 @@ const Authors = (props) => {
       <h2>Edit author's year of born</h2>
       <form onSubmit={submit}>
         <div>
-          Author's name:
-          <input
-            value={authorToEdit}
-            onChange={({ target }) => setAuthorToEdit(target.value)}
+          <Select
+            value={selectedAuthor}
+            onChange={setSelectedAuthor}
+            options={authorNames}
           />
         </div>
         <div>
