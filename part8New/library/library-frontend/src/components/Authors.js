@@ -1,5 +1,5 @@
   
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useQuery, useMutation } from '@apollo/client'
 
 import  { ALL_AUTHORS, EDIT_AUTHOR } from '../queries'
@@ -10,10 +10,11 @@ const Authors = (props) => {
 
   const [ authorToEdit, setAuthorToEdit ] = useState('')
   const [ birthYear, setBirthYear ] = useState('')
+  const [ errorMessage, setErrorMessage ] = useState(null)
 
-  const [ editAuthor ] = useMutation(EDIT_AUTHOR)
+  const [ editAuthor, result ] = useMutation(EDIT_AUTHOR)
 
-  const submit = async (event) =>{
+  const submit = async (event) => {
     event.preventDefault()
 
     editAuthor({ variables: { name: authorToEdit, setBornTo: birthYear } })
@@ -21,7 +22,20 @@ const Authors = (props) => {
     setAuthorToEdit('')
     setBirthYear('')
   }
+
+  useEffect(() => {
+    if (result.data && result.data.editAuthor === null) {
+      notify('author not found, please check spelling')
+    }
+  }, [result.data])
   
+  const notify = (message) => {
+    setErrorMessage(message)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 10000)
+  }
+
   if (!props.show) {
     return null
   }
@@ -30,8 +44,10 @@ const Authors = (props) => {
     return <div>loading...</div>
   }
 
+
   return (
     <div>
+      <Notify errorMessage={errorMessage}></Notify>
       <h2>authors</h2>
       <table>
         <tbody>
@@ -71,6 +87,17 @@ const Authors = (props) => {
         </div>
         <button type='submit'>Set year of birth</button>
       </form>
+    </div>
+  )
+}
+
+const Notify = ({errorMessage}) => {
+  if ( !errorMessage ) {
+    return null
+  }
+  return (
+    <div style={{color: 'red'}}>
+      {errorMessage}
     </div>
   )
 }
