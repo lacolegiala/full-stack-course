@@ -12,7 +12,9 @@ const Authors = (props) => {
   const [ birthYear, setBirthYear ] = useState('')
   const [ errorMessage, setErrorMessage ] = useState(null)
 
-  const [ editAuthor, result ] = useMutation(EDIT_AUTHOR)
+  const [ editAuthor, result ] = useMutation(EDIT_AUTHOR, {
+    refetchQueries: [ { query: ALL_AUTHORS } ]
+  })
 
   const submit = async (event) => {
     event.preventDefault()
