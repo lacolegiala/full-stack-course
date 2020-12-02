@@ -88,7 +88,7 @@ const resolvers = {
       let book
       if (await Author.where({ name: args.author }).countDocuments() === 0) {
         book = new Book({ ...args, author: new Author({ name: args.author })})
-        const author = new Author({ name: args.author })
+        const author = new Author({ name: args.author, born: null })
         author.save()
       }
       else {
