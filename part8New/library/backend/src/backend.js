@@ -78,11 +78,11 @@ const resolvers = {
       return await Author.find({})
     }
   },
-  // Author: {
-  //   bookCount: (root) => {
-  //     return (Book.find({ author: root })).countDocuments()
-  //   }
-  // },
+  Author: {
+    bookCount: (root) => {
+      return (Book.find({ author: root })).countDocuments()
+    }
+  },
   Mutation: {
     addBook: async (root, args) => {
       let book
