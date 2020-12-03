@@ -81,21 +81,22 @@ const resolvers = {
   },
   Author: {
     bookCount: (root) => {
-      return (Book.find({ author: root })).countDocuments()
+      return (Book.find( { author: { $in: root._id } } )).countDocuments()
     }
   },
   Mutation: {
     addBook: async (root, args) => {
       let book
-      if (await Author.where({ name: args.author }).countDocuments() === 0) {
-        book = new Book({ ...args, author: new Author({ name: args.author })})
-        const author = new Author({ name: args.author, born: null })
-        author.save()
-      }
-      else {
-        book = new Book({...args})
-      }
-      return book.save()
+      const foundAuthor = await Author.findOne({name: args.author})
+        if (!foundAuthor) {
+          const newAuthor = new Author({ name: args.author, born: null })
+          book = new Book({ ...args, author: newAuthor})
+          newAuthor.save()
+        }
+        else {
+          book = new Book({...args, author: foundAuthor})
+        }
+        return book.save()
     },
     editAuthor: async (root, args) => {
       const author = await Author.findOne({ name: args.name })
