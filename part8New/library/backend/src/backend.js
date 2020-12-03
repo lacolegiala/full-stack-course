@@ -5,10 +5,11 @@ const mongoose = require('mongoose')
 const Author = require('./models/author')
 const Book = require('./models/book')
 const { countDocuments } = require('./models/author')
+const author = require('./models/author')
 
 const MONGODB_URI = process.env.MONGODB_URI
 
-console.log('connecting to', MONGODB_URI)
+console.log('connecting to mongo')
 
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
   .then(() => {
