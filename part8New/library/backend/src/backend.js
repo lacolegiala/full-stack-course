@@ -1,14 +1,13 @@
 const { ApolloServer, gql, UserInputError } = require('apollo-server')
+const jwt = require('jsonwebtoken')
 require('dotenv').config()
-const { v1: uuid } = require('uuid')
 const mongoose = require('mongoose')
 const Author = require('./models/author')
 const Book = require('./models/book')
 const User = require('./models/user')
-const { countDocuments } = require('./models/author')
-const author = require('./models/author')
 
 const MONGODB_URI = process.env.MONGODB_URI
+const SECRET = process.env.SECRET
 
 console.log('connecting to mongo')
 
@@ -97,6 +96,9 @@ const resolvers = {
     },
     allAuthors: async () => {
       return await Author.find({})
+    },
+    me: (root, args, context) => {
+      return context.currentUser
     }
   },
   Author: {
@@ -147,6 +149,31 @@ const resolvers = {
         })
       }
       return author
+    },
+    createUser: async (root, args) => {
+      const newUser = new User({ username: args.username, favoriteGenre: args.favoriteGenre, password: 'passwordthatisthesameforeveryonegg' })
+      try {
+        await newUser.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args
+        })
+      }
+      return newUser
+    },
+    login: async (root, args) => {
+      const user = await User.findOne({ username: args.username })
+
+      if (!user || args.password !== 'passwordthatisthesameforeveryonegg') {
+        throw new UserInputError("wrong credentials")
+      }
+
+      const userForToken = {
+        username: user.username,
+        id: user._id
+      }
+
+      return { value: jwt.sign(userForToken, SECRET) }
     }
   }
 }
@@ -154,6 +181,17 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: async ({ req }) => {
+    const auth = req ? req.headers.authorization : null
+    if (auth && auth.toLowerCase().startsWith('bearer ')) {
+      const decodedToken = jwt.verify(
+        auth.substring(7), SECRET
+      )
+      const currentUser = await User
+        .findById(decodedToken.id)
+      return { currentUser }
+    }
+  }
 })
 
 server.listen().then(({ url }) => {
