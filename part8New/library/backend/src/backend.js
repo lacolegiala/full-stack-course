@@ -1,4 +1,4 @@
-const { ApolloServer, gql, UserInputError } = require('apollo-server')
+const { ApolloServer, gql, UserInputError, AuthenticationError } = require('apollo-server')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 const mongoose = require('mongoose')
@@ -107,14 +107,21 @@ const resolvers = {
     }
   },
   Mutation: {
-    addBook: async (root, args) => {
+    addBook: async (root, args, context) => {
       let book
+      const currentUser = context.currentUser
+
+      if (!currentUser) {
+        throw new AuthenticationError("not authenticated")
+      }
+
       const foundAuthor = await Author.findOne({name: args.author})
+      let newAuthor = null
         if (!foundAuthor) {
-          const newAuthor = new Author({ name: args.author, born: null })
-          book = new Book({ ...args, author: newAuthor})
+          newAuthor = new Author({ name: args.author, born: null })
           try {
             await newAuthor.save()
+            book = new Book({ ...args, author: newAuthor})
           } catch (error) {
             throw new UserInputError(error.message, {
               invalidArgs: args
