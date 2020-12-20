@@ -10,6 +10,11 @@ const App = () => {
   const [page, setPage] = useState('authors')
   const [token, setToken] = useState(null)
 
+  const successfulLogin = (newToken) => {
+    setPage('authors')
+    setToken(newToken)
+  }
+
   return (
     <div>
       <div>
@@ -34,10 +39,9 @@ const App = () => {
       />
 
       <Login
-        setToken={setToken}
         show={page === 'login'}
-        
-      />
+        successfulLogin={successfulLogin}
+      />  
 
     </div>
   )

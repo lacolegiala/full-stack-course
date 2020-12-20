@@ -8,16 +8,17 @@ const Login = (props) => {
 
   const [ login, result ] = useMutation(LOGIN_USER, {
     onError: (error) => {
+      alert('wrong credentials')
       console.log(error.graphQLErrors[0].message)
     }
   })
 
   
   useEffect(() => {
-    if ( result.data ) {
+    if ( result.data && result.data.login ) {
       const token = result.data.login.value
-      props.setToken(token)
       localStorage.setItem('library-user-token', token)
+      props.successfulLogin(token)
     }
   }, [result.data]) // eslint-disable-line
   
@@ -25,12 +26,14 @@ const Login = (props) => {
     event.preventDefault()
     
     login({ variables: { username, password } })
+    setUsername('')
+    setPassword('')
   }
   
   if (!props.show) {
     return null
   }
-
+  
   return (
     <div>
       <h2>Login</h2>
