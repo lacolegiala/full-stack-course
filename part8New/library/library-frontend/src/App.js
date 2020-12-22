@@ -12,10 +12,11 @@ const App = () => {
   const client = useApolloClient()
 
   useEffect(() => {
-    if (localStorage.getItem('library-user-token')) {
-      setToken(localStorage.getItem('library-user-token'))
+    const libraryToken = localStorage.getItem('library-user-token')
+    if (libraryToken) {
+      setToken(libraryToken)
     }
-  }, localStorage.getItem('library-user-token'))
+  }, [])
 
   const successfulLogin = (newToken) => {
     setPage('authors')
