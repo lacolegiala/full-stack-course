@@ -5,7 +5,6 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Login from './components/Login'
-import Notification from './components/Notification'
 
 const App = () => {
   const [page, setPage] = useState('authors')
