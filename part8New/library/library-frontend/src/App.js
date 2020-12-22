@@ -22,7 +22,7 @@ const App = () => {
         <button onClick={() => setPage('books')}>books</button>
         {token &&
         <div>
-          <button>add book</button>
+          <button onClick={() => setPage('add')}>add book</button>
           <button onClick={() => setPage('logout')}>logout</button>
         </div>
         }
