@@ -20,11 +20,20 @@ const App = () => {
       <div>
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
-        <button onClick={() => setPage('add')}>add book</button>
-        <button onClick={() => setPage('login')}>login</button>
+        {token &&
+        <div>
+          <button>add book</button>
+          <button onClick={() => setPage('logout')}>logout</button>
+        </div>
+        }
+        {!token &&
+          <button onClick={() => setPage('login')}>login</button>
+        }
       </div>
 
-      {token && <div>Logged in</div>}
+      <NewBook
+        show={page === 'add'}
+      />
 
       <Authors
         show={page === 'authors'}
@@ -34,9 +43,6 @@ const App = () => {
         show={page === 'books'}
       />
 
-      <NewBook
-        show={page === 'add'}
-      />
 
       <Login
         show={page === 'login'}
