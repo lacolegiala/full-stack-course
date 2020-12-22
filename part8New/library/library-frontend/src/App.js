@@ -12,9 +12,9 @@ const App = () => {
   const client = useApolloClient()
 
   useEffect(() => {
-    const libraryToken = localStorage.getItem('library-user-token')
-    if (libraryToken) {
-      setToken(libraryToken)
+    const tokenFromStorage = localStorage.getItem('library-user-token')
+    if (tokenFromStorage) {
+      setToken(tokenFromStorage)
     }
   }, [])
 
