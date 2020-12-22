@@ -20,7 +20,7 @@ const App = () => {
   const afterLogout = () => {
     setPage('authors')
     setToken(null)
-    localStorage.clear()
+    localStorage.removeItem('library-user-token')
     client.resetStore()
   }
 
