@@ -11,6 +11,10 @@ const Books = (props) => {
 
   const genresPlusAllBooks = genres.data ? genres.data.allGenres.concat('all books') : []
 
+  useEffect(() => {
+    getBooks()
+  }, [])
+
   if (!props.show) {
     return null
   }
@@ -19,11 +23,11 @@ const Books = (props) => {
     return <div>loading...</div>
   }
 
-  function filterByGenre(genreParameter) {
-    setGenre(genreParameter)
-    genre !== 'all books'
-    ? getBooks({ variables: { genre: genre }})
-    : getBooks()
+  function filterByGenre(selectedGenre) {
+    setGenre(selectedGenre)
+    selectedGenre !== 'all books'
+      ? getBooks({ variables: { genre: selectedGenre }})
+      : getBooks()
   }
 
   return (
