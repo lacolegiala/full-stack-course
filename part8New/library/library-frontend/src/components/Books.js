@@ -15,7 +15,7 @@ const Books = (props) => {
     selectedGenre !== 'all books'
       ? getBooks({ variables: { genre: selectedGenre }})
       : getBooks()
-  }, [selectedGenre])
+  }, [selectedGenre, getBooks])
 
   if (!props.show) {
     return null
