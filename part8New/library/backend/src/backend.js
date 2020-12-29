@@ -56,6 +56,7 @@ const typeDefs = gql`
     authorCount: Int!
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
+    allGenres: [String]!
     me: User
     userFavoriteGenreBooks: [Book!]!
   }
@@ -81,6 +82,17 @@ const typeDefs = gql`
     ): Token
   }
 `
+function makeArrayUnique(array) {
+  const uniqueArray = []
+
+  for (let i = 0; i < array.length; i++) {
+    if (uniqueArray.indexOf(array[i]) === -1) {
+      uniqueArray.push(array[i])
+    }
+  }
+  return uniqueArray
+}
+
 const resolvers = {
   Query: {
     bookCount: () => Book.collection.countDocuments(),
@@ -95,6 +107,12 @@ const resolvers = {
     },
     allAuthors: async () => {
       return await Author.find({})
+    },
+    allGenres: async () => {
+      const allGenres = (await Book.find({})).flatMap(book =>
+        book.genres
+      )
+      return makeArrayUnique(allGenres)
     },
     me: (root, args, context) => {
       return context.currentUser
