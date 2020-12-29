@@ -12,8 +12,10 @@ const Books = (props) => {
   const genresPlusAllBooks = genres.data ? genres.data.allGenres.concat('all books') : []
 
   useEffect(() => {
-    getBooks()
-  }, [])
+    genre !== 'all books'
+      ? getBooks({ variables: { genre: genre }})
+      : getBooks()
+  }, [genre])
 
   if (!props.show) {
     return null
@@ -23,20 +25,13 @@ const Books = (props) => {
     return <div>loading...</div>
   }
 
-  function filterByGenre(selectedGenre) {
-    setGenre(selectedGenre)
-    selectedGenre !== 'all books'
-      ? getBooks({ variables: { genre: selectedGenre }})
-      : getBooks()
-  }
-
   return (
     <div>
       <h2>books</h2>
       {genresPlusAllBooks.map(genre => 
         <button
           key={genre}
-          onClick={() => filterByGenre(genre)}
+          onClick={() => setGenre(genre)}
         >{genre}
         </button>
       )}
