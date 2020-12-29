@@ -4,7 +4,7 @@ import { useQuery, useLazyQuery } from '@apollo/client'
 import  { ALL_BOOKS, ALL_GENRES } from '../queries'
 
 const Books = (props) => {
-  const [genre, setGenre] = useState('all books')
+  const [selectedGenre, setSelectedGenre] = useState('all books')
 
   const [getBooks, result] = useLazyQuery(ALL_BOOKS)
   const genres = useQuery(ALL_GENRES)
@@ -12,10 +12,10 @@ const Books = (props) => {
   const genresPlusAllBooks = genres.data ? genres.data.allGenres.concat('all books') : []
 
   useEffect(() => {
-    genre !== 'all books'
-      ? getBooks({ variables: { genre: genre }})
+    selectedGenre !== 'all books'
+      ? getBooks({ variables: { genre: selectedGenre }})
       : getBooks()
-  }, [genre])
+  }, [selectedGenre])
 
   if (!props.show) {
     return null
@@ -31,7 +31,7 @@ const Books = (props) => {
       {genresPlusAllBooks.map(genre => 
         <button
           key={genre}
-          onClick={() => setGenre(genre)}
+          onClick={() => setSelectedGenre(genre)}
         >{genre}
         </button>
       )}
