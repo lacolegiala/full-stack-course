@@ -22,6 +22,12 @@ export const ALL_BOOKS = gql`
     }
   }
 `
+export const ALL_GENRES = gql`
+  query {
+    allGenres
+  }
+`
+
 export const FAVORITE_GENRE_BOOKS = gql`
   query {
     userFavoriteGenreBooks {

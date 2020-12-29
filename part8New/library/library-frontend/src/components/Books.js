@@ -1,27 +1,13 @@
 import React, { useState } from 'react'
 import { useQuery } from '@apollo/client'
 
-import  { ALL_BOOKS } from '../queries'
-
-function makeArrayUnique(array) {
-  const uniqueArray = []
-
-  for (let i = 0; i < array.length; i++) {
-    if (uniqueArray.indexOf(array[i]) === -1) {
-      uniqueArray.push(array[i])
-    }
-  }
-  return uniqueArray
-}
+import  { ALL_BOOKS, ALL_GENRES } from '../queries'
 
 const Books = (props) => {
   const [genre, setGenre] = useState('all books')
 
   const books = useQuery(ALL_BOOKS)
-  const genres = books.data ? makeArrayUnique(books.data.allBooks.flatMap(book =>
-    book.genres  
-  ))
-  : []
+  const genres = useQuery(ALL_GENRES)
 
   const genresPlusAllBooks = genres.concat('all books')
 
