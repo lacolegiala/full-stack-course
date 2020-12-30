@@ -1,10 +1,16 @@
 import React from 'react'
-import { useQuery } from '@apollo/client'
-import { FAVORITE_GENRE_BOOKS, CURRENT_USER } from '../queries'
+import { useQuery, useSubscription } from '@apollo/client'
+import { FAVORITE_GENRE_BOOKS, CURRENT_USER, BOOK_ADDED } from '../queries'
 
 const Recommendations = (props) => {
   const books = useQuery(FAVORITE_GENRE_BOOKS)
   const currentUser = useQuery(CURRENT_USER)
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: () => {
+      books.refetch()
+    }
+  })
 
   const favoriteGenre = currentUser.data
     ? currentUser.data.me.favoriteGenre
