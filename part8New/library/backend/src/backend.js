@@ -32,7 +32,7 @@ const typeDefs = gql`
     name: String!
     id: ID!
     born: Int
-    bookCount: Int!
+    bookCount: Int
   }
   
   type Book {
@@ -128,11 +128,6 @@ const resolvers = {
       return await Book.find({ genres: favoriteGenre }).populate('author')
     }
   },
-  Author: {
-    bookCount: (root) => {
-      return (Book.find( { author: { $in: root._id } } )).countDocuments()
-    }
-  },
   Mutation: {
     addBook: async (root, args, context) => {
       let book
@@ -142,10 +137,10 @@ const resolvers = {
         throw new AuthenticationError("not authenticated")
       }
 
-      const foundAuthor = await Author.findOne({name: args.author})
+      let foundAuthor = await Author.findOne({name: args.author})
       let newAuthor = null
         if (!foundAuthor) {
-          newAuthor = new Author({ name: args.author, born: null })
+          newAuthor = new Author({ name: args.author, born: null, bookCount: 1 })
           try {
             await newAuthor.save()
             book = new Book({ ...args, author: newAuthor})
@@ -157,6 +152,7 @@ const resolvers = {
         }
         else {
           book = new Book({...args, author: foundAuthor})
+          foundAuthor = await Author.updateOne({_id: foundAuthor._id}, {$set: {bookCount: foundAuthor.bookCount + 1}})
         }
         if (foundAuthor || newAuthor) {
           try {
