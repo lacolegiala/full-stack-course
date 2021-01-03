@@ -5,7 +5,7 @@
   "main": "backend.js",
   "scripts": {
     "test": "test",
-    "nak": "nodemon src/backend.js"
+    "dev": "nodemon src/backend.js"
   },
   "repository": {
     "type": "git",
