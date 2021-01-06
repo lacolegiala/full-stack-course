@@ -8,7 +8,8 @@
     "ts-node": "ts-node",
     "bmi": "ts-node src/bmiCalculator.ts",
     "start": "ts-node src/index.ts",
-    "dev": "ts-node-dev src/index.ts"
+    "dev": "ts-node-dev src/index.ts",
+    "lint": "eslint --ext .ts ."
   },
   "author": "",
   "license": "ISC",
