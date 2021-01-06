@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "ts-node": "ts-node",
     "bmi": "ts-node src/bmiCalculator.ts",
-    "start": "ts-node src/index.ts"
+    "start": "ts-node src/index.ts",
+    "dev": "ts-node-dev src/index.ts"
   },
   "author": "",
   "license": "ISC",
