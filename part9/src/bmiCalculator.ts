@@ -1,5 +1,8 @@
 const calculateBmi = (height: number, weight: number) => {
   const bmi = weight / ((height / 100) ** 2)
+  if (!bmi) {
+    return 'Invalid arguments! Height and weight must be numbers greater than 0'
+  }
   if (bmi < 18.5) {
     return 'Underweight. Go eat a sandwich.'
   }
