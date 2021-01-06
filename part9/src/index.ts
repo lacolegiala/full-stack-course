@@ -1,14 +1,15 @@
-import express from 'express';
+// import express from 'express';
+const express = require('express')
 const app = express();
 import calculateBmi from './bmiCalculator';
 import calculateExercises from './exerciseCalculator';
 app.use(express.json());
 
-app.get('/hello', (_req, res) => {
+app.get('/hello', (_req: any, res: any) => {
   res.send('Hello Full Stack!');
 });
 
-app.get('/bmi', (req, res) => {
+app.get('/bmi', (req: any, res: any) => {
   if (Number(req.query.height) > 0 && Number(req.query.weight) > 0) {
     return res.json({
       weight: Number(req.query.weight),
@@ -23,7 +24,7 @@ app.get('/bmi', (req, res) => {
   }
 });
 
-app.post('/exercises', (req, res) => {
+app.post('/exercises', (req: any, res: any) => {
   console.log(req.body);
   const stats = req.body as {hours?: number[], target?: number};
 
