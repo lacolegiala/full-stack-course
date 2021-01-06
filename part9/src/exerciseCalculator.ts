@@ -56,14 +56,4 @@ const calculateExercises = (hours: number[], target: number): Result => {
   return stats;
 };
 
-const target = Number(process.argv[2]);
-
-const hours = [];
-
-for (let i = 3; i < process.argv.length; i++) {
-  hours.push(Number(process.argv[i]));
-}
-
-console.log(calculateExercises(hours, target));
-
 export default calculateExercises;
