@@ -1,35 +1,45 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
+interface CoursePart {
+  name: string,
+  exerciseCount: number
+}
+
 interface HeaderProps {
   title: string
 }
 
 interface ContentProps {
-  name: string,
-  numberOfExercises: number
+  courses: CoursePart[]
 }
 
-interface TotalProps {
-  totalNumberOfExercises: number
-}
+// interface TotalProps {
+//   totalNumberOfExercises: number
+// }
 
-const Header: React.FC<HeaderProps> = (props) => {
+const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
   return <h1>{props.title}</h1>
 }
 
-const Content: React.FC<ContentProps> = (props) => {
+const Content: React.FC<ContentProps> = (props: ContentProps) => {
   return (
     <p>
-      <div>{props.name}</div>
-      <div>{props.numberOfExercises}</div>
+      {props.courses.map(part =>
+        <div key={part.name}>
+          {part.name}
+          {part.exerciseCount}
+        </div>
+      )}
     </p>
   )
 }
 
-const Total: React.FC<TotalProps> = (props) => {
+const Total: React.FC<ContentProps> = (props: ContentProps) => {
+  const totalNumberOfExercises = props.courses.reduce((carry, part) => carry + part.exerciseCount, 0)
+
   return (
-    <div>Number of exercises {props.totalNumberOfExercises}</div>
+    <div>Number of exercises {totalNumberOfExercises}</div>
   )
 }
 
@@ -50,15 +60,11 @@ const App: React.FC = () => {
     }
   ];
 
-  const totalNumberOfExercises = courseParts.reduce((carry, part) => carry + part.exerciseCount, 0)
-
   return (
     <div>
       <Header title={courseName}></Header>
-      <Content name={courseParts[0].name} numberOfExercises={courseParts[0].exerciseCount}></Content>
-      <Content name={courseParts[1].name} numberOfExercises={courseParts[1].exerciseCount}></Content>
-      <Content name={courseParts[2].name} numberOfExercises={courseParts[2].exerciseCount}></Content>
-      <Total totalNumberOfExercises={totalNumberOfExercises}></Total>
+      <Content courses={courseParts}></Content>
+      <Total courses={courseParts}></Total>
     </div>
   );
 };
